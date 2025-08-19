@@ -1,17 +1,17 @@
 import java.util.*;
 
 /**
- * حل مسئله محاسبه مسیرهای منحصر به فرد در یک ماتریس با موانع
- * Matrix Pathfinder with Obstacles - Complete Java Solution
+ * Matrix Pathfinding with Obstacles - English Version
+ * Complete Java Solution for finding paths in matrix with obstacles
  */
-public class MatrixPathfinder {
+public class MatrixPathfinderEnglish {
     
-    // جهات حرکت: راست، پایین، چپ، بالا
+    // Movement directions: right, down, left, up
     private static final int[][] DIRECTIONS = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-    private static final String[] DIR_NAMES = {"راست", "پایین", "چپ", "بالا"};
+    private static final String[] DIR_NAMES = {"RIGHT", "DOWN", "LEFT", "UP"};
     
     /**
-     * کلاس برای نمایش موقعیت در ماتریس
+     * Class to represent position in matrix
      */
     static class Position {
         int row, col;
@@ -41,7 +41,7 @@ public class MatrixPathfinder {
     }
     
     /**
-     * کلاس برای نمایش مسیر
+     * Class to represent a path
      */
     static class Path {
         List<Position> positions;
@@ -72,7 +72,7 @@ public class MatrixPathfinder {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("مسیر (طول: ").append(length).append("): ");
+            sb.append("Path (length: ").append(length).append("): ");
             for (int i = 0; i < positions.size(); i++) {
                 sb.append(positions.get(i));
                 if (i < positions.size() - 1) {
@@ -87,7 +87,7 @@ public class MatrixPathfinder {
     private int rows, cols;
     private boolean[][] visited;
     
-    public MatrixPathfinder(int[][] matrix) {
+    public MatrixPathfinderEnglish(int[][] matrix) {
         this.matrix = matrix;
         this.rows = matrix.length;
         this.cols = matrix[0].length;
@@ -95,7 +95,7 @@ public class MatrixPathfinder {
     }
     
     /**
-     * بررسی معتبر بودن موقعیت
+     * Check if position is valid
      */
     private boolean isValid(int row, int col) {
         return row >= 0 && row < rows && col >= 0 && col < cols && 
@@ -103,21 +103,21 @@ public class MatrixPathfinder {
     }
     
     /**
-     * پیدا کردن تمام مسیرهای ممکن بین دو نقطه با استفاده از DFS
-     * با محدودیت تعداد مسیرها برای جلوگیری از مشکلات حافظه
+     * Find all possible paths between two points using DFS
+     * with limit to prevent memory issues
      */
     public List<Path> findAllPaths(Position start, Position end) {
-        return findAllPaths(start, end, 1000); // محدودیت 1000 مسیر
+        return findAllPaths(start, end, 1000); // limit to 1000 paths
     }
     
     /**
-     * پیدا کردن تمام مسیرهای ممکن با محدودیت تعداد
+     * Find all possible paths with path count limit
      */
     public List<Path> findAllPaths(Position start, Position end, int maxPaths) {
         List<Path> allPaths = new ArrayList<>();
         Path currentPath = new Path();
         
-        // ریست کردن ماتریس بازدید
+        // Reset visited matrix
         for (int i = 0; i < rows; i++) {
             Arrays.fill(visited[i], false);
         }
@@ -127,7 +127,7 @@ public class MatrixPathfinder {
     }
     
     /**
-     * الگوریتم DFS برای پیدا کردن تمام مسیرها
+     * DFS algorithm to find all paths
      */
     private void dfs(int currentRow, int currentCol, int targetRow, int targetCol, 
                      Path currentPath, List<Path> allPaths) {
@@ -135,30 +135,30 @@ public class MatrixPathfinder {
     }
     
     /**
-     * الگوریتم DFS برای پیدا کردن تمام مسیرها با محدودیت تعداد
+     * DFS algorithm to find all paths with count limit
      */
     private void dfs(int currentRow, int currentCol, int targetRow, int targetCol, 
                      Path currentPath, List<Path> allPaths, int maxPaths) {
         
-        // بررسی محدودیت تعداد مسیرها
+        // Check path count limit
         if (allPaths.size() >= maxPaths) {
             return;
         }
         
-        // محدودیت طول مسیر برای جلوگیری از حلقه‌های بی‌نهایت
+        // Path length limit to prevent infinite loops
         if (currentPath.length > rows * cols) {
             return;
         }
         
-        // اضافه کردن موقعیت فعلی به مسیر
+        // Add current position to path
         currentPath.addPosition(new Position(currentRow, currentCol));
         visited[currentRow][currentCol] = true;
         
-        // اگر به مقصد رسیدیم
+        // If we reached the destination
         if (currentRow == targetRow && currentCol == targetCol) {
             allPaths.add(new Path(currentPath));
         } else {
-            // بررسی تمام جهات ممکن
+            // Check all possible directions
             for (int[] direction : DIRECTIONS) {
                 int newRow = currentRow + direction[0];
                 int newCol = currentCol + direction[1];
@@ -169,13 +169,13 @@ public class MatrixPathfinder {
             }
         }
         
-        // بازگشت (backtrack)
+        // Backtrack
         currentPath.removeLastPosition();
         visited[currentRow][currentCol] = false;
     }
     
     /**
-     * پیدا کردن کوتاه‌ترین مسیر با استفاده از BFS
+     * Find shortest path using BFS
      */
     public Path findShortestPath(Position start, Position end) {
         Queue<List<Position>> queue = new LinkedList<>();
@@ -214,21 +214,20 @@ public class MatrixPathfinder {
             }
         }
         
-        return null; // مسیری پیدا نشد
+        return null; // No path found
     }
     
     /**
-     * نمایش ماتریس
+     * Display matrix
      */
     public void printMatrix() {
-        System.out.println("ماتریس:");
         System.out.println("Matrix:");
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (matrix[i][j] == -1) {
-                    System.out.print("█  "); // استفاده از کاراکتر Unicode برای مانع
+                    System.out.print("█  "); // Block for obstacle
                 } else {
-                    System.out.print("·  "); // نقطه برای خانه آزاد
+                    System.out.print("·  "); // Dot for free cell
                 }
             }
             System.out.println();
@@ -237,40 +236,40 @@ public class MatrixPathfinder {
     }
     
     /**
-     * نمایش مسیر روی ماتریس
+     * Display path on matrix
      */
     public void printMatrixWithPath(Path path) {
         if (path == null || path.positions.isEmpty()) {
-            System.out.println("مسیری برای نمایش وجود ندارد!");
+            System.out.println("No path to display!");
             return;
         }
         
-        // ایجاد کپی از ماتریس برای نمایش
+        // Create display matrix copy
         String[][] displayMatrix = new String[rows][cols];
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (matrix[i][j] == -1) {
-                    displayMatrix[i][j] = "X";
+                    displayMatrix[i][j] = "█";
                 } else {
-                    displayMatrix[i][j] = ".";
+                    displayMatrix[i][j] = "·";
                 }
             }
         }
         
-        // علامت‌گذاری مسیر
+        // Mark path
         for (int i = 0; i < path.positions.size(); i++) {
             Position pos = path.positions.get(i);
             if (i == 0) {
-                displayMatrix[pos.row][pos.col] = "S"; // شروع
+                displayMatrix[pos.row][pos.col] = "S"; // Start
             } else if (i == path.positions.size() - 1) {
-                displayMatrix[pos.row][pos.col] = "E"; // پایان
+                displayMatrix[pos.row][pos.col] = "E"; // End
             } else {
-                displayMatrix[pos.row][pos.col] = "*"; // مسیر
+                displayMatrix[pos.row][pos.col] = "*"; // Path
             }
         }
         
-        System.out.println("ماتریس با مسیر:");
+        System.out.println("Matrix with path:");
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 System.out.printf("%-3s", displayMatrix[i][j]);
@@ -281,12 +280,12 @@ public class MatrixPathfinder {
     }
     
     /**
-     * تابع اصلی برای تست
+     * Main method for testing
      */
     public static void main(String[] args) {
-        System.out.println("=== حل مسئله مسیریابی در ماتریس با موانع ===\n");
+        System.out.println("=== Matrix Pathfinding with Obstacles Solution ===\n");
         
-        // مثال 1: ماتریس 4x4 با موانع
+        // Example 1: 4x4 matrix with obstacles
         int[][] matrix1 = {
             {0, 0, 0, 0},
             {0, -1, 0, 0},
@@ -294,33 +293,33 @@ public class MatrixPathfinder {
             {0, 0, 0, 0}
         };
         
-        MatrixPathfinder pathfinder1 = new MatrixPathfinder(matrix1);
+        MatrixPathfinderEnglish pathfinder1 = new MatrixPathfinderEnglish(matrix1);
         pathfinder1.printMatrix();
         
         Position start1 = new Position(0, 0);
         Position end1 = new Position(3, 3);
         
-        System.out.println("نقطه شروع: " + start1);
-        System.out.println("نقطه پایان: " + end1 + "\n");
+        System.out.println("Start point: " + start1);
+        System.out.println("End point: " + end1 + "\n");
         
-        // پیدا کردن کوتاه‌ترین مسیر
+        // Find shortest path
         Path shortestPath = pathfinder1.findShortestPath(start1, end1);
         if (shortestPath != null) {
-            System.out.println("کوتاه‌ترین مسیر:");
+            System.out.println("Shortest path:");
             System.out.println(shortestPath);
             pathfinder1.printMatrixWithPath(shortestPath);
         }
         
-        // پیدا کردن تمام مسیرهای ممکن
+        // Find all possible paths
         List<Path> allPaths = pathfinder1.findAllPaths(start1, end1);
-        System.out.println("تمام مسیرهای ممکن (" + allPaths.size() + " مسیر):");
+        System.out.println("All possible paths (" + allPaths.size() + " paths):");
         for (int i = 0; i < allPaths.size(); i++) {
             System.out.println((i + 1) + ". " + allPaths.get(i));
         }
         
         System.out.println("\n" + "=".repeat(50));
         
-        // مثال 2: ماتریس پیچیده‌تر
+        // Example 2: More complex matrix
         int[][] matrix2 = {
             {0, 0, -1, 0, 0},
             {0, -1, 0, 0, 0},
@@ -329,37 +328,37 @@ public class MatrixPathfinder {
             {0, 0, -1, 0, 0}
         };
         
-        MatrixPathfinder pathfinder2 = new MatrixPathfinder(matrix2);
-        System.out.println("\nمثال دوم:");
+        MatrixPathfinderEnglish pathfinder2 = new MatrixPathfinderEnglish(matrix2);
+        System.out.println("\nExample 2:");
         pathfinder2.printMatrix();
         
         Position start2 = new Position(0, 0);
         Position end2 = new Position(4, 4);
         
-        System.out.println("نقطه شروع: " + start2);
-        System.out.println("نقطه پایان: " + end2 + "\n");
+        System.out.println("Start point: " + start2);
+        System.out.println("End point: " + end2 + "\n");
         
         Path shortestPath2 = pathfinder2.findShortestPath(start2, end2);
         if (shortestPath2 != null) {
-            System.out.println("کوتاه‌ترین مسیر:");
+            System.out.println("Shortest path:");
             System.out.println(shortestPath2);
             pathfinder2.printMatrixWithPath(shortestPath2);
         } else {
-            System.out.println("مسیری بین این دو نقطه وجود ندارد!");
+            System.out.println("No path exists between these points!");
         }
         
-        // آمار کلی
+        // Overall statistics
         List<Path> allPaths2 = pathfinder2.findAllPaths(start2, end2);
-        System.out.println("تعداد کل مسیرهای ممکن: " + allPaths2.size());
+        System.out.println("Total possible paths: " + allPaths2.size());
         
         if (!allPaths2.isEmpty()) {
             int minLength = allPaths2.stream().mapToInt(p -> p.length).min().orElse(0);
             int maxLength = allPaths2.stream().mapToInt(p -> p.length).max().orElse(0);
             double avgLength = allPaths2.stream().mapToInt(p -> p.length).average().orElse(0);
             
-            System.out.println("کوتاه‌ترین مسیر: " + minLength + " قدم");
-            System.out.println("طولانی‌ترین مسیر: " + maxLength + " قدم");
-            System.out.println("میانگین طول مسیرها: " + String.format("%.2f", avgLength) + " قدم");
+            System.out.println("Shortest path: " + minLength + " steps");
+            System.out.println("Longest path: " + maxLength + " steps");
+            System.out.println("Average path length: " + String.format("%.2f", avgLength) + " steps");
         }
     }
 }
